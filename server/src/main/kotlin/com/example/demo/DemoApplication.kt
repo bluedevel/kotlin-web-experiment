@@ -1,10 +1,9 @@
 package com.example.demo
 
-import kotlinx.html.HtmlBlockTag
-import kotlinx.html.h1
+import kotlinx.html.TagConsumer
+import kotlinx.html.dom.createHTMLDocument
+import kotlinx.html.dom.serialize
 import kotlinx.html.p
-import kotlinx.html.span
-import kotlinx.html.stream.appendHTML
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -29,11 +28,10 @@ class RouterConfig {
         "/hello".nest {
             GET("") {
                 ok().contentType(TEXT_HTML).body(fromObject(buildString {
-                    appendHTML().run {
-                        appBase {
-                            helloWorldHandler.handle(this)
-                        }
+                    val tree = createHTMLDocument().appBase {
+                        helloWorldHandler.handle(this)
                     }
+                    append(tree.serialize())
                 }))
             }
         }
@@ -46,7 +44,7 @@ class RouterConfig {
 
 @Component
 class HelloWorldHandler {
-    fun handle(body: HtmlBlockTag) {
+    fun <R> handle(body: TagConsumer<R>) {
         body.run {
             custom {
                 +"Hallo Welt!"
@@ -57,11 +55,4 @@ class HelloWorldHandler {
             }
         }
     }
-}
-
-fun HtmlBlockTag.custom(block: () -> Unit = {}) = h1 {
-    span {
-        +"Custom: "
-    }
-    block()
 }
