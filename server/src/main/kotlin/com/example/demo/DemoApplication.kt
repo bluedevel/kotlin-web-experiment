@@ -46,10 +46,6 @@ class RouterConfig {
 class HelloWorldHandler {
     fun <R> handle(body: TagConsumer<R>) {
         body.run {
-            custom {
-                +"Hallo Welt!"
-            }
-
             p {
                 +"Some text for testing"
             }

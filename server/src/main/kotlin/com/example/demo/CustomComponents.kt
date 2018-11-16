@@ -7,9 +7,11 @@ fun <R> TagConsumer<R>.appBase(block: TagConsumer<R>.() -> Unit): R {
     return html {
         head {
             link(rel = "stylesheet", href = "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
+
+            meta(name = "viewport", content = "width=device-width, initial-scale=1, shrink-to-fit=no")
         }
         body {
-            h1 { +"This is the app" }
+            fancyh1("TestApp", "Build entirely with Kotlin")
 
             div("test-class") {
                 block()
@@ -22,9 +24,7 @@ fun <R> TagConsumer<R>.appBase(block: TagConsumer<R>.() -> Unit): R {
     }
 }
 
-fun <R> TagConsumer<R>.custom(block: HtmlBlockTag.() -> Unit = {}) = h1 {
-    span {
-        +"Custom: "
-    }
-    block()
+fun <R> TagConsumer<R>.fancyh1(primary: String, secondary: String) = h1 {
+    +primary
+    small("text-muted") { +secondary }
 }
