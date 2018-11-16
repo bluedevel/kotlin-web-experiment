@@ -1,6 +1,9 @@
 package com.example.demo
 
-import kotlinx.html.*
+import kotlinx.html.HtmlBlockTag
+import kotlinx.html.h1
+import kotlinx.html.p
+import kotlinx.html.span
 import kotlinx.html.stream.appendHTML
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -25,13 +28,13 @@ class RouterConfig {
     fun route(helloWorldHandler: HelloWorldHandler) = router {
         "/hello".nest {
             GET("") {
-                ok()
-                        .contentType(TEXT_HTML)
-                        .body(fromObject(buildString {
-                            appendHTML().body {
-                                helloWorldHandler.handle(this)
-                            }
-                        }))
+                ok().contentType(TEXT_HTML).body(fromObject(buildString {
+                    appendHTML().run {
+                        appBase {
+                            helloWorldHandler.handle(this)
+                        }
+                    }
+                }))
             }
         }
         "/**" {
@@ -43,7 +46,7 @@ class RouterConfig {
 
 @Component
 class HelloWorldHandler {
-    fun handle(body: BODY) {
+    fun handle(body: HtmlBlockTag) {
         body.run {
             custom {
                 +"Hallo Welt!"
