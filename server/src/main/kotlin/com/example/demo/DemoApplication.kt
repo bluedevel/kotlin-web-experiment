@@ -49,6 +49,8 @@ class HelloWorldHandler {
             p {
                 +"Some text for testing"
             }
+
+            badge()
         }
     }
 }
